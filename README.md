@@ -44,6 +44,25 @@ This engine:
 | **Payment Method**| If paid with Visa, apply 5% |
 
 
+## Business Rules Implemented
+**Project Workflow & Design Rules**
+This project follows a rule-based engine approach where qualifiers and discount functions are cleanly separated and composable.
+
+**Workflow**
+Step 1: Define qualifier functions that take an Order and return a Boolean, indicating whether a rule applies.
+
+Step 2: Pair each qualifier with a corresponding discount function, which returns a Double representing the discount amount.
+
+Step 3: If multiple rules apply, select the top 2 highest discounts and average them.
+
+Step 4: Return a fully updated Order object with:
+
+avgDiscount applied
+
+new_price calculated
+
+
+
 ## Output Format
 - **`rules_engine.log`**:
 2025-05-19 21:15:01 [INFO] - Applied discount #1: 10.00% to 'Cheese - Gouda'
