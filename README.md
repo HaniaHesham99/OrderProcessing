@@ -2,6 +2,16 @@
 
 This Scala project implements a functional rule engine that processes retail transaction data from a CSV file, applies business discount rules, and outputs the results along with detailed logs.
 
+Retail companies often run complex promotional campaigns where different discounts apply to different products based on quantity, product type, order channel, expiry date, and more. Manually managing these rules becomes error-prone and inflexible.
+
+This engine:
+- Automates applying up to **two matching discounts per order**
+- **Calculates the average of applicable discounts**
+- **Updates the order's final price**
+- Logs every step to a structured log file for traceability
+- Outputs final results to a clean CSV file for analysis or further processing
+
+
 ---
 
 ##  Features
@@ -12,22 +22,15 @@ This Scala project implements a functional rule engine that processes retail tra
 -  Logs each action (including skipped discounts) to `rules_engine.log`
 -  Writes processed orders to `final_orders.csv`
 
-## Project Structure
-src/
-├── main/
-│ ├── scala/
-│ │ └── orderprocessingapp/
-│ │ ├── Main.scala # Entry point
-│ │ ├── Order.scala # Data model
-│ │ ├── OrderParser.scala # CSV line → Order
-│ │ ├── DiscountProcessor.scala # Rules and processing logic
-│ │ ├── LoggingPure.scala # Pure logging helpers
-│ │ ├── LogEntry.scala # Log entry case class
-│ │ └── CSVWriter.scala # CSV output writer
-│ └── resources/
-│ ├── TRX1000.csv # Input file
-│ ├── final_orders.csv # Output file
-│ └── rules_engine.log # Log file
+## ✅ Core Functionalities
+
+- **Read & Parse:** Input transactions are read from a CSV file (`TRX1000.csv`) and parsed into `Order` objects.
+- **Discount Qualification:** Each order is evaluated against six predefined business rules.
+- **Top Discount Selection:** If multiple discounts apply, the top two (by value) are selected and averaged.
+- **Pure Logging:** Each applied discount, final price, or missing qualification is logged as a `LogEntry`.
+- **Output Generation:**
+  - All logs are written to `rules_engine.log`
+  - Final orders are exported to `final_orders.csv`
 
 ## Business Rules Implemented
 
@@ -46,6 +49,12 @@ src/
 2025-05-19 21:15:01 [INFO] - Applied discount #1: 10.00% to 'Cheese - Gouda'
 2025-05-19 21:15:01 [INFO] - Final price for 'Cheese - Gouda': 8.91
 2025-05-19 21:15:01 [WARN] - No discounts applied to 'Soap - Scented'
+
+  ### ✅ CSV Output (`final_orders.csv`)
+| product_name    | unit_price | avg_discount | new_price | discounts_list       |
+|----------------|------------|---------------|------------|----------------------|
+| Cheese - Gouda | 9.9        | 0.075         | 8.91       | [0.1; 0.05]          |
+| Soap - Basic   | 48.05      | 0.0           | 48.05      | []                   |
 
 
 
